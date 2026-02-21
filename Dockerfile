@@ -17,7 +17,9 @@ COPY backend/go.mod .
 COPY backend/go.sum .
 RUN go mod download
 COPY backend/. .
-COPY --from=front /app/.output/public /app/public
+# 适配 Zeabur 的输出路径
+COPY --from=front /app/.zeabur/output/static /app/public
+
 RUN go build -tags prod -ldflags="-s -w -X main.version=${VERSION} -X main.commitId=${COMMIT_ID}" -o /app/moments
 
 FROM alpine
